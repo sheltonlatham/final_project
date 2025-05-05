@@ -7,7 +7,7 @@ from sklearn.decomposition import PCA
 from scipy.stats import zscore
 
 df = pd.read_csv('./data/Seasons_Stats.csv')  
-df = df[df['Year'].between(2015, 2020)]
+df = df[df['Year'].between(2012, 2017)]
 
 keep_cols = ['Player', 'Pos', 'PTS', 'AST', 'TRB', 'STL', 'BLK', 'TOV',
              'FG%', '3P%', 'FT%', 'G', 'MP']
@@ -32,7 +32,7 @@ print(pca_weights.T.round(3).sort_values(by='PC1', ascending=False))
 
 plt.figure(figsize=(8, 6))
 sns.scatterplot(data=df, x='PC1', y='PC2', hue='Cluster', style='Pos', palette='Set2')
-plt.title('NBA Player Clusters (2015–2020)\nColored by Cluster, Shaped by Position')
+plt.title('NBA Player Clusters (2012–2017)\nColored by Cluster, Shaped by Position')
 plt.xlabel('Principal Component 1')
 plt.ylabel('Principal Component 2')
 plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
@@ -45,7 +45,7 @@ print(crosstab)
 
 crosstab_norm = crosstab.div(crosstab.sum(axis=1), axis=0)
 crosstab_norm.plot(kind='bar', stacked=True, colormap='Set2', figsize=(8, 5))
-plt.title('Distribution of Clusters Within Each Position (2015–2020)')
+plt.title('Distribution of Clusters Within Each Position (2012–2017)')
 plt.ylabel('Proportion of Players')
 plt.xlabel('Position')
 plt.legend(title='Cluster', bbox_to_anchor=(1.05, 1), loc='upper left')
