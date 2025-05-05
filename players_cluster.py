@@ -18,6 +18,17 @@ features = ['PTS', 'AST', 'TRB', 'STL', 'BLK', 'TOV', 'FG%', '3P%', 'FT%', 'G', 
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(df[features])
 
+df[features].hist(bins=20, figsize=(14, 10), layout=(4, 3))
+plt.suptitle("Distributions of NBA Player Stats (2012–2017)", fontsize=16)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10, 8))
+sns.heatmap(df[features].corr(), annot=True, cmap='coolwarm', fmt=".2f")
+plt.title("Correlation Heatmap of Player Statistics (2012–2017)")
+plt.tight_layout()
+plt.show()
+
 kmeans = KMeans(n_clusters=4, random_state=42)
 df['Cluster'] = kmeans.fit_predict(X_scaled)
 
@@ -27,7 +38,7 @@ df['PC1'] = pca_result[:, 0]
 df['PC2'] = pca_result[:, 1]
 
 pca_weights = pd.DataFrame(pca.components_, columns=features, index=['PC1', 'PC2'])
-print("\nContribution of Stats to Principal Components (Higher = More Influence):")
+print("Contribution of Stats to Principal Components (Higher = More Influence):")
 print(pca_weights.T.round(3).sort_values(by='PC1', ascending=False))
 
 plt.figure(figsize=(8, 6))
@@ -40,7 +51,7 @@ plt.tight_layout()
 plt.show()
 
 crosstab = pd.crosstab(df['Pos'], df['Cluster'])
-print("\nPosition vs. Cluster Distribution:")
+print("Position vs. Cluster Distribution:")
 print(crosstab)
 
 crosstab_norm = crosstab.div(crosstab.sum(axis=1), axis=0)
@@ -80,7 +91,7 @@ for pos, stats in unexpected_stats.items():
             })
 
 unusual_df = pd.DataFrame(unusual_players)
-print("\nPlayers Who Excel in Unexpected Traits for Their Position:")
+print("Players Who Excel in Unexpected Traits for Their Position:")
 print(unusual_df.sort_values(by='z-Score', ascending=False).head(15))
 
 unusual_df.to_csv('unexpected_role_players.csv', index=False)
